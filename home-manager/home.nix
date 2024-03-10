@@ -5,7 +5,11 @@
   pkgs,
   nix-colors,
   ...
-}: {
+}:
+let
+  inherit (inputs.nix-colors.lib-contrib { inherit pkgs; }) gtkThemeFromScheme;
+in
+{
   imports = [
     nix-colors.homeManagerModule
 
@@ -35,23 +39,44 @@
     };
   };
 
-  colorScheme = nix-colors.colorSchemes.dracula;
-
   home = {
     username = "admin";
     homeDirectory = "/home/admin";
     packages = with pkgs; [];
   };
 
-  programs = {
-    kitty = {
-      enable = true;
-      settings = {
-        foreground = "#${config.colorScheme.palette.base05}";
-        background = "#${config.colorScheme.palette.base00}";
-        # ...
-      };
+  # Theming
+  colorScheme = nix-colors.colorSchemes.dracula;
+  gtk = {
+    enable = true;
+    theme = {
+      name = "${config.colorscheme.slug}";
+      package = gtkThemeFromScheme { scheme = config.colorscheme; };
     };
+    cursorTheme = {
+      name = "Bibata-Modern-Ice";
+      package = pkgs.bibata-cursors;
+    };
+    # iconTheme = {
+    #   name = "GruvboxPlus";
+    #   package = gruvboxPlus;
+    # };
+    iconTheme = {
+      name = "Papirus";
+      package = pkgs.papirus-icon-theme;
+    };
+  };
+  qt = {
+    enable = true;
+    platformTheme = "gtk";
+    style = {
+      name = "gtk2";
+      package = pkgs.qt6Packages.qt6gtk2;
+    };
+    # style = {
+    #   name = "adwaita-dark";
+    #   package = pkgs.adwaita-qt;
+    # };
   };
 
   # Nicely reload system units when changing configs
