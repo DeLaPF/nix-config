@@ -12,6 +12,7 @@
     # TODO: Add any other flake you might need
     # hardware.url = "github:nixos/nixos-hardware";
 
+    hyprland.url = "github:hyprwm/Hyprland";
     nix-colors.url = "github:misterio77/nix-colors";
   };
 
@@ -19,6 +20,7 @@
     self,
     nixpkgs,
     home-manager,
+    hyprland,
     nix-colors,
     ...
   } @ inputs: let
@@ -39,7 +41,7 @@
     homeConfigurations = {
       "admin@refrigeratarr" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
-        extraSpecialArgs = {inherit inputs outputs nix-colors;};
+        extraSpecialArgs = {inherit inputs outputs hyprland nix-colors;};
         # > Our main home-manager configuration file <
         modules = [./home-manager/home.nix];
       };
