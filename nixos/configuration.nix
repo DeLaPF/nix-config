@@ -150,6 +150,7 @@
   # List packages installed in system profile
   environment.systemPackages = with pkgs; [
     # Devenv
+    gcc
     home-manager
     ripgrep
     starship
