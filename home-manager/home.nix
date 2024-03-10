@@ -88,7 +88,7 @@ in
   wayland.windowManager.hyprland = {
     enable = true;
     settings = {
-      monitor = [ "eDP-1,1920x1080@59,0x0,1.1" ];
+      monitor = [ "eDP-1,1920x1080@59,0x0,1" ];
       env = [ "XCURSOR_SIZE,24" ];
       input = {
         kb_layout = "us";
@@ -99,6 +99,7 @@ in
       
         sensitivity = 0; # -1.0 - 1.0, 0 means no modification.
       };
+      exec-once = [ "kitty" ];
 
       general = {
         gaps_in = 5;

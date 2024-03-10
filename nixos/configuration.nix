@@ -124,12 +124,31 @@
   };
 
   # Lid Close
-  services.logind.extraConfig = ''
-    # don't power off on short press
-    HnadlePowerKey=ignore
-    # do nothing on lid close
-    HandleLidSwitch=ignore
-  '';
+  services = {
+    # logind = {
+    #   lidSwitch = "ignore";
+    #   powerKey = "ignore";
+    #   powerKeyLongPress = "poweroff";
+    # };
+    logind.extraConfig = ''
+      HandlePowerKey="ignore"
+      HandlePowerKeyLongPress="poweroff"
+      HandleLidSwitch="ignore"
+    '';
+    upower = {
+      ignoreLid = true;
+    };
+  };
+
+  # Systemd
+  systemd.services.brighten = {
+    script = ''
+      echo "Setting brightness to max"
+      brightnessctl s 100%
+    '';
+    path = [ pkgs.brightnessctl ];
+    wantedBy = [ "multi-user.target" ];
+  };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users = {
