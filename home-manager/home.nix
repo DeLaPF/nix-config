@@ -43,6 +43,18 @@ in
     username = "admin";
     homeDirectory = "/home/admin";
     packages = with pkgs; [];
+    file.".zsh/plugins/zsh-syntax-highlighting" = {
+      source = pkgs.fetchgit {
+        url = "https://github.com/zsh-users/zsh-syntax-highlighting.git";
+        hash = "sha256-Vt2yKzMRJ34FBFPKrN+GJBZYmBt5ASArrs1dkZcIQmI";
+      };
+    };
+    file.".tmux/plugins/tpm" = {
+      source = pkgs.fetchgit {
+        url = "https://github.com/tmux-plugins/tpm.git";
+        hash = "sha256-1agBX7r4tEdG3fRvsuXHj+YfhsIj0eLLA1Wl8fP+UbQ";
+      };
+    };
   };
 
   # Theming
@@ -57,10 +69,6 @@ in
       name = "Bibata-Modern-Ice";
       package = pkgs.bibata-cursors;
     };
-    # iconTheme = {
-    #   name = "GruvboxPlus";
-    #   package = gruvboxPlus;
-    # };
     iconTheme = {
       name = "Papirus";
       package = pkgs.papirus-icon-theme;
@@ -73,10 +81,6 @@ in
       name = "gtk2";
       package = pkgs.qt6Packages.qt6gtk2;
     };
-    # style = {
-    #   name = "adwaita-dark";
-    #   package = pkgs.adwaita-qt;
-    # };
   };
 
   # Nicely reload system units when changing configs
