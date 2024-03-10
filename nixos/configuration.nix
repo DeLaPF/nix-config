@@ -1,5 +1,3 @@
-# This is your system's configuration file.
-# Use this to configure your system environment (it replaces /etc/nixos/configuration.nix)
 {
   inputs,
   lib,
@@ -7,7 +5,6 @@
   pkgs,
   ...
 }: {
-  # You can import other NixOS modules here
   imports = [
     # If you want to use modules from other flakes (such as nixos-hardware):
     # inputs.hardware.nixosModules.common-cpu-amd
@@ -107,11 +104,13 @@
 
   # Programs
   programs = {
-    zsh.enable = true;
+    git.enable = true;
     hyprland = {
       enable = true;
       xwayland.enable = true;
     };
+    neovim.enable = true;
+    zsh.enable = true;
   };
 
   # Pipewire
@@ -151,8 +150,7 @@
   # List packages installed in system profile
   environment.systemPackages = with pkgs; [
     # Devenv
-    git
-    neovim
+    home-manager
     ripgrep
     starship
     stow
