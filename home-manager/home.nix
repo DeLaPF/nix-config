@@ -163,7 +163,7 @@ in
       bind = $mainMod, Q, killactive,
       bind = $mainMod SHIFT, Q, exit,
       bind = $mainMod, F, fullscreen,
-      bind = $mainMod, Z, fullscreen, 1
+      bind = $mainMod, M, fullscreen, 1
       bind = $mainMod, E, exec, dolphin
       bind = $mainMod, V, togglefloating, 
       bind = $mainMod, R, exec, wofi --show drun

@@ -158,6 +158,7 @@
     tmux
 
     # Shell Tools
+    btop
     curl
     gawk
 
@@ -168,6 +169,7 @@
 
     # Apps
     firefox
+    qpwgraph
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
