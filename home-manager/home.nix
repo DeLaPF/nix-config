@@ -222,6 +222,7 @@ in
     '';
   };
 
+  programs.gh.enable = true;
   programs.kitty = {
     enable = true;
     font = {
