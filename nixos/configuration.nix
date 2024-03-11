@@ -125,18 +125,11 @@
 
   # Lid Close
   services = {
-    # logind = {
-    #   lidSwitch = "ignore";
-    #   powerKey = "ignore";
-    #   powerKeyLongPress = "poweroff";
-    # };
-    logind.extraConfig = ''
-      HandlePowerKey="ignore"
-      HandlePowerKeyLongPress="poweroff"
-      HandleLidSwitch="ignore"
-    '';
-    upower = {
-      ignoreLid = true;
+    # Run `sudo systemctl restart systemd-logind` to restart
+    logind = {
+      lidSwitch = "ignore";
+      powerKey = "lock";
+      # powerKeyLongPress = "poweroff";
     };
   };
 
