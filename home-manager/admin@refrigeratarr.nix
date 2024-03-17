@@ -15,9 +15,13 @@ in
     hyprland.homeManagerModules.default
     nix-colors.homeManagerModule
 
-    # You can also split up your configuration and import pieces of it here:
-    # ./nvim.nix
+    ./dev-envs/main.nix
   ];
+
+  dev-envs = {
+    enable = true;
+    esp32.enable = true;
+  };
 
   nixpkgs = {
     # You can add overlays here

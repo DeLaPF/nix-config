@@ -38,12 +38,16 @@
 
     # Standalone home-manager configuration entrypoint
     # Available through 'home-manager --flake .#your-username@your-hostname'
-    homeConfigurations = {
-      "admin@refrigeratarr" = home-manager.lib.homeManagerConfiguration {
+    homeConfigurations =
+      let
+        user1 = "admin@refrigeratarr";
+      in
+    {
+      ${user1} = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
         extraSpecialArgs = {inherit inputs outputs hyprland nix-colors;};
         # > Our main home-manager configuration file <
-        modules = [./home-manager/home.nix];
+        modules = [ ./home-manager/${user1+".nix"} ];
       };
     };
   };
