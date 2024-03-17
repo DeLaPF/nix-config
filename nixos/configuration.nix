@@ -162,9 +162,11 @@
   # List packages installed in system profile
   environment.systemPackages = with pkgs; [
     # Devenv
+    cargo
     gcc
     home-manager
     ripgrep
+    rustc
     starship
     stow
     tmux
