@@ -21,6 +21,7 @@ in
   dev-envs = {
     enable = true;
     esp32.enable = true;
+    android.enable = true;
   };
 
   nixpkgs = {

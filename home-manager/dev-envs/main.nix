@@ -5,13 +5,12 @@ in
 {
   imports = [
     ./esp32.nix
+    ./android.nix
   ];
 
   options = {
     dev-envs.enable = lib.mkEnableOption "Enable Dev Env Options/Configuration";
   };
 
-  config = lib.mkIf cfg.enable {
-    home.packages = with pkgs; [];
-  };
+  config = lib.mkIf cfg.enable {};
 }
