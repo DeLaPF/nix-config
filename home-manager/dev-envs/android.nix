@@ -18,6 +18,7 @@ in
     home.packages = with pkgs; [
       androidenv.androidPkgs_9_0.androidsdk
       android-tools
+      flutter # TODO: possibly move to own module
     ];
   };
 }
