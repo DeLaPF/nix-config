@@ -6,33 +6,11 @@
   ...
 }: {
   imports = [
-    # If you want to use modules from other flakes (such as nixos-hardware):
-    # inputs.hardware.nixosModules.common-cpu-amd
-    # inputs.hardware.nixosModules.common-ssd
-
-    # You can also split up your configuration and import pieces of it here:
-    # ./users.nix
-
-    # Import your generated (nixos-generate-config) hardware configuration
     ./hardware-configuration.nix
   ];
 
   nixpkgs = {
-    # You can add overlays here
-    overlays = [
-      # If you want to use overlays exported from other flakes:
-      # neovim-nightly-overlay.overlays.default
-
-      # Or define it inline, for example:
-      # (final: prev: {
-      #   hi = final.hello.overrideAttrs (oldAttrs: {
-      #     patches = [ ./change-hello-to-hi.patch ];
-      #   });
-      # })
-    ];
-    # Configure your nixpkgs instance
     config = {
-      # Disable if you don't want unfree packages
       allowUnfree = true;
     };
   };
@@ -53,9 +31,7 @@
     config.nix.registry;
 
   nix.settings = {
-    # Enable flakes and new 'nix' command
     experimental-features = [ "nix-command" "flakes" ];
-    # Deduplicate and optimize nix store
     auto-optimise-store = true;
   };
 
@@ -64,20 +40,13 @@
   boot.loader.efi.canTouchEfiVariables = true;
   boot.supportedFilesystems = [ "ntfs" ];
 
-  networking.hostName = "refrigeratarr"; # Define your hostname.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-
-  # Enable networking
+  # Networking
+  networking.hostName = "refrigeratarr";
   networking.networkmanager.enable = true;
+  # networking.wireless.enable = true;
 
-  # Set your time zone.
+  # Time and Locales
   time.timeZone = "America/New_York";
-
-  # Select internationalisation properties.
   i18n = {
     defaultLocale = "en_US.UTF-8";
     extraLocaleSettings = {
@@ -143,7 +112,6 @@
     wantedBy = [ "multi-user.target" ];
   };
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users = {
     admin = {
       description = "admin";
@@ -152,7 +120,6 @@
       # Be sure to change it (using passwd) after rebooting!
       initialPassword = "adminadmin";
       extraGroups = [ "networkmanager" "wheel" "video" "docker" ];
-      packages = with pkgs; [];
       openssh.authorizedKeys.keys = [
         # TODO: Add your SSH public key(s) here, if you plan on using SSH to connect
       ];
@@ -161,29 +128,11 @@
 
   # List packages installed in system profile
   environment.systemPackages = with pkgs; [
-    # Devenv
-    cargo
-    gcc
-    home-manager
-    ripgrep
-    rustc
-    starship
-    stow
-    tmux
-
-    # Shell Tools
     btop
     curl
     gawk
-
-    # Hyprland
-    brightnessctl
-    kitty
-    wofi
-
-    # Apps
-    firefox
-    qpwgraph
+    home-manager
+    stow
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
