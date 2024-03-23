@@ -47,6 +47,10 @@ in
         hash = "sha256-1agBX7r4tEdG3fRvsuXHj+YfhsIj0eLLA1Wl8fP+UbQ";
       };
     };
+    file.".profile".text = ''
+      # -*- mode: sh -*-
+      . "${config.home.profileDirectory}/etc/profile.d/hm-session-vars.sh"
+    '';
     packages = with pkgs; [
       # Devenv
       cargo
