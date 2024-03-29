@@ -48,8 +48,7 @@ in
       };
     };
     file.".add_env".text = ''
-      # -*- mode: sh -*-
-      . "${config.home.profileDirectory}/etc/profile.d/hm-session-vars.sh"
+      source $HOME/.config/.shellHelpers
     '';
     packages = with pkgs; [
       # Devenv

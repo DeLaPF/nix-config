@@ -32,12 +32,14 @@ in
 
     # Required solution described here: https://stackoverflow.com/questions/77174188/nixos-issues-with-flutter-run
     # Also required solution described here: https://discourse.nixos.org/t/problem-building-flutter-app-for-android/35593/2
-    # TODO: manage variables myself in custom sourced file, since home-manager only allows sourcing once per session (a bit strange imo)
-    home.sessionVariables = {
-      ANDROID_HOME = "${androidSdk}/libexec/android-sdk";
-      ANDROID_SDK_ROOT = "${androidSdk}/libexec/android-sdk";
-      JAVA_HOME = pinnedJdk;
-      GRADLE_OPTS = "-Dorg.gradle.project.android.aapt2FromMavenOverride=${androidSdk}/libexec/android-sdk/build-tools/34.0.0/aapt2";
-    };
+    shellHelpers = [
+      ''
+        # Anroid Dev Env
+        export ANDROID_HOME="${androidSdk}/libexec/android-sdk";
+        export ANDROID_SDK_ROOT="${androidSdk}/libexec/android-sdk";
+        export JAVA_HOME=pinnedJdk;
+        export GRADLE_OPTS="-Dorg.gradle.project.android.aapt2FromMavenOverride=${androidSdk}/libexec/android-sdk/build-tools/34.0.0/aapt2";
+      ''
+    ];
   };
 }

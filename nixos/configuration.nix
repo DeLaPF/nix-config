@@ -135,6 +135,12 @@
     stow
   ];
 
+  environment.sessionVariables = {
+    EDITOR = "vim";
+    XDG_CONFIG_HOME = "$HOME/.config";
+    XDG_CACHE_HOME = "$HOME/.cache";
+  };
+
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;
