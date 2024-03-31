@@ -10,7 +10,7 @@ in
 
   options = {
     dev-envs.enable = lib.mkEnableOption "Enable Dev Env Options/Configuration";
-    shellHelpers = lib.mkOption {
+    dev-envs.shellHelpers = lib.mkOption {
       type = lib.types.listOf lib.types.lines;
       default = [];
       example = [
@@ -32,7 +32,7 @@ in
   config = lib.mkIf cfg.enable {
     home.file.".config/.shellHelpers".text = ''
       #!/usr/bin/env bash
-      ${lib.strings.concatMapStrings (x: "\n" + x) config.shellHelpers}
+      ${lib.strings.concatMapStrings (x: "\n" + x) cfg.shellHelpers}
     '';
   };
 }

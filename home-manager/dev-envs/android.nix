@@ -32,7 +32,7 @@ in
 
     # Required solution described here: https://stackoverflow.com/questions/77174188/nixos-issues-with-flutter-run
     # Also required solution described here: https://discourse.nixos.org/t/problem-building-flutter-app-for-android/35593/2
-    shellHelpers = [
+    dev-envs.shellHelpers = [
       ''
         # Anroid Dev Env
         export ANDROID_HOME="${androidSdk}/libexec/android-sdk";
