@@ -2,6 +2,7 @@
 {
   imports = [
     ./hardware-configuration.nix
+    ../modules/print-server.nix
   ];
 
   # Bootloader.
@@ -75,7 +76,7 @@
   users.users.admin = {
     isNormalUser = true;
     description = "admin";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "lpadmin" ];
     shell = pkgs.zsh;
     packages = with pkgs; [
     #  thunderbird
@@ -117,6 +118,10 @@
   # services.openssh.enable = true;
 
   # Open ports in the firewall.
+  # TODO: switch to using raw nftables
+  networking.firewall = {
+    enable = true;
+  };
   # networking.firewall.allowedTCPPorts = [ ... ];
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
