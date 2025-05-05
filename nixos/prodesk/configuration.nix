@@ -3,7 +3,10 @@
   imports = [
     ./hardware-configuration.nix
     ../modules/print-server.nix
+    ../modules/minecraft/service.nix
   ];
+
+  minecraft.enable = true;
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;

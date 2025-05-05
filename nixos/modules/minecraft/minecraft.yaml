@@ -1,0 +1,36 @@
+_yaml_defaults:
+  host_dir: &host_dir /var/lib/minecraft-data
+  host_port: &host_port 25565
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: minecraft-server
+spec:
+  containers:
+  - name: minecraft
+    image: docker.io/itzg/minecraft-server:latest
+    env:
+    - name: EULA
+      value: "TRUE"
+    - name: MEMORY
+      value: "4G"
+    ports:
+    - containerPort: 25565
+      hostPort: *host_port
+      protocol: TCP
+    volumeMounts:
+    - mountPath: /data
+      name: minecraft-data
+    securityContext:
+      runAsNonRoot: true
+      readOnlyRootFilesystem: true
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+  volumes:
+  - name: minecraft-data
+    hostPath:
+      path: *host_dir
+      type: Directory
