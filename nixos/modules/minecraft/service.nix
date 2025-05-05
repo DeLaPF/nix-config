@@ -14,7 +14,7 @@ let
   cfg = config.minecraft;
 
   # TODO: improve replacement with foldl' and replacement paring (possibly validate)
-  podDef = pkgs.writeText "minecraft.yaml" (
+  podDef = pkgs.writeText "minecraft-replaced.yaml" (
     lib.strings.replaceStrings [
       "&${yamlDefaults.hostDir.name} ${yamlDefaults.hostDir.val}"
       "&${yamlDefaults.hostPort.name} ${toString yamlDefaults.hostPort.val}"
@@ -55,7 +55,10 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    virtualisation.podman.enable = true;
+    virtualisation.podman = {
+      enable = true;
+      defaultNetwork.settings.dns_enabled = true;
+    };
     networking.firewall.allowedTCPPorts = [ cfg.hostPort ];
 
     users.users.${cfg.user} = {
@@ -63,6 +66,11 @@ in
       group = cfg.group;
       home = cfg.hostDir;
       createHome = true;
+      linger = true;
+
+      # Required to allow podman to map internal ids to host ids
+      subUidRanges = [{ startUid = 100000; count = 65536; }];
+      subGidRanges = [{ startGid = 100000; count = 65536; }];
     };
     users.groups.${cfg.group} = {};
 
@@ -80,6 +88,7 @@ in
       serviceConfig = {
         Type = "oneshot";
         RemainAfterExit = true;
+        WorkingDirectory = cfg.hostDir;
         User = cfg.user;
         Group = cfg.group;
         ExecStart = "${pkgs.podman}/bin/podman play kube --replace ${podDef}";
