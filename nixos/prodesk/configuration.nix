@@ -3,10 +3,11 @@
   imports = [
     ./hardware-configuration.nix
     ../modules/print-server.nix
-    ../modules/minecraft/service.nix
-  ];
 
-  minecraft.enable = true;
+    # Parameterized module import
+    # (could be called multiple times for multiple services)
+    (import ../modules/minecraft/service.param.nix {})
+  ];
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
