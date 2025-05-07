@@ -22,13 +22,13 @@ spec:
     volumeMounts:
     - mountPath: /data
       name: minecraft-data
-    securityContext:
-      runAsNonRoot: true
-      readOnlyRootFilesystem: true
-      allowPrivilegeEscalation: false
-      capabilities:
-        drop:
-        - ALL
+      # securityContext:
+      #   runAsNonRoot: true
+      #   readOnlyRootFilesystem: true
+      #   allowPrivilegeEscalation: false
+      #   capabilities:
+      #     drop:
+      #     - ALL
   volumes:
   - name: minecraft-data
     hostPath:

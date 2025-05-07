@@ -76,6 +76,10 @@ in
 
     # Let the user own the data directory
     systemd.tmpfiles.rules = [
+      # Note: 3 bits <read><write><exec>, 3 3bit values <owner><group><world>
+      # Example: 777 -> 111,111,111 -> read, write, exec for all
+      # Example: 750 -> 111,111,111 -> rwe for owner, re for group, nothing for world
+      # Q: why the leading 0?
       "d ${cfg.hostDir} 0750 ${cfg.user} ${cfg.group} - -"
     ];
 
@@ -86,9 +90,13 @@ in
       wantedBy = [ "multi-user.target" ];
 
       serviceConfig = {
-        Type = "oneshot";
+        # Type = "oneshot";
+        Type = "simple";
         RemainAfterExit = true;
         WorkingDirectory = cfg.hostDir;
+        Slice = "user.slice";
+        Delegate = true;  # Allow cgroups management
+        NotifyAccess = "all";
         User = cfg.user;
         Group = cfg.group;
         ExecStart = "${pkgs.podman}/bin/podman play kube --replace ${podDef}";
