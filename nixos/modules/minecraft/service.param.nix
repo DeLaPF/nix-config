@@ -2,38 +2,38 @@
 # as such it can not be included directly in config `imports` list
 # instead include like: `(import <path> {<required_args>})` in `imports` list
 
-let
-  # TODO: add memory control
-  yamlDefaults = {
-    hostDir = {
-      name = "host_dir";
-      val = "/var/lib/minecraft-data";
-    };
-    hostPort = {
-      name = "host_port";
-      val = 25565;
-    };
-  };
-in {
+{
   # TODO: type check/assert
-  yamlPath ? ./minecraft.yaml,
+  yamlPath ? ./minecraft.template.yaml,
   sName ? "minecraft-server",
   uName ? "minecraft",
   gName ? "minecraft",
-  hostDir ? yamlDefaults.hostDir.val,
-  hostPort ? yamlDefaults.hostPort.val,
+  suHome ? "/var/lib/su_home",
+  hostPort ? 25565,
+  replacements ? {
+    # It feels like HOST_DIR would be better set by sDir,
+    # but that isn't available here
+    HOST_DIR = "/var/lib/su_home/minecraft/minecraft-server";
+    HOST_PORT = "25565";
+    MEMORY = "4G";
+  },
 }:
 { config, lib, pkgs, ... }:
 let
-  # TODO: improve replacement with foldl' and replacement paring (possibly validate)
-  podDef = pkgs.writeText "${baseNameOf yamlPath}-replaced.yaml" (
-    lib.strings.replaceStrings [
-      "&${yamlDefaults.hostDir.name} ${yamlDefaults.hostDir.val}"
-      "&${yamlDefaults.hostPort.name} ${toString yamlDefaults.hostPort.val}"
-    ] [
-      "&${yamlDefaults.hostDir.name} ${hostDir}"
-      "&${yamlDefaults.hostPort.name} ${toString hostPort}"
-    ] (builtins.readFile yamlPath)
+  # TODO: is there a safer method to join paths?
+  uHome = "${suHome}/${uName}";
+  sDir = "${uHome}/${sName}";
+
+  _replacements = lib.mapAttrsToList (name: value: {
+    search = "\"{{${name}}}\"";
+    replace = value;
+  }) replacements;
+  
+  yamlNameNoExt = lib.strings.nameFromURL (toString yamlPath) ".";
+  podDef = pkgs.writeText "${yamlNameNoExt}.yaml" (
+    lib.foldl (content: replacement:
+      lib.strings.replaceStrings [replacement.search] [replacement.replace] content
+    ) (builtins.readFile yamlPath) _replacements
   );
 in
 {
@@ -46,7 +46,7 @@ in
   users.users.${uName} = {
     isSystemUser = true;
     group = gName;
-    home = hostDir;
+    home = uHome;
     createHome = true;
     linger = true;
 
@@ -57,13 +57,13 @@ in
   users.groups.${gName} = {};
 
   # Let the user own the data directory
-  systemd.tmpfiles.rules = [
-    # Note: 3 bits <read><write><exec>, 3 3bit values <owner><group><world>
-    # Example: 777 -> 111,111,111 -> read, write, exec for all
-    # Example: 750 -> 111,111,111 -> rwe for owner, re for group, nothing for world
-    # Q: why the leading 0?
-    "d ${hostDir} 0750 ${uName} ${gName} - -"
-  ];
+  # systemd.tmpfiles.rules = [
+  #   # Note: 3 bits <read><write><exec>, 3 3bit values <owner><group><world>
+  #   # Example: 777 -> 111,111,111 -> read, write, exec for all
+  #   # Example: 750 -> 111,111,111 -> rwe for owner, re for group, nothing for world
+  #   # Q: why the leading 0?
+  #   "d ${uHome} 0750 ${uName} ${gName} - -"
+  # ];
 
   systemd.services.${sName} = {
     description = "Run podman ${sName}";
@@ -72,10 +72,8 @@ in
     wantedBy = [ "multi-user.target" ];
 
     serviceConfig = {
-      # Type = "oneshot";
       Type = "simple";
       RemainAfterExit = true;
-      WorkingDirectory = hostDir;
       Slice = "user.slice";
       Delegate = true;  # Allow cgroups management
       NotifyAccess = "all";
