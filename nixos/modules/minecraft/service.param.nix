@@ -36,6 +36,9 @@ let
   );
 in
 {
+  environment.systemPackages = with pkgs; [
+    shadow
+  ];
   virtualisation.podman = {
     enable = true;
     defaultNetwork.settings.dns_enabled = true;
@@ -56,7 +59,7 @@ in
   users.groups.${gName} = {};
 
   systemd.services.${sName} = {
-    description = "Run podman ${sName}";
+    description = "${sName} (podman play kube)";
     after = [ "network.target" "podman.service" ];
     requires = [ "podman.service" ];
     wantedBy = [ "multi-user.target" ];
