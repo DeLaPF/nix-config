@@ -11,9 +11,6 @@
   suHome ? "/var/lib/su_home",
   hostPort ? 25565,
   replacements ? {
-    # It feels like HOST_DIR would be better set by sDir,
-    # but that isn't available here
-    HOST_DIR = "/var/lib/su_home/minecraft/minecraft-server";
     HOST_PORT = "25565";
     MEMORY = "4G";
   },
@@ -24,15 +21,17 @@ let
   uHome = "${suHome}/${uName}";
   sDir = "${uHome}/${sName}";
 
+  # Add default `HOST_DIR` if missing, ignored if not in yaml file
+  replwHostDir = replacements // { HOST_DIR = replacements.HOST_DIR or sDir; };
   _replacements = lib.mapAttrsToList (name: value: {
     search = "\"{{${name}}}\"";
     replace = value;
-  }) replacements;
+  }) replwHostDir;
   
   yamlNameNoExt = lib.strings.nameFromURL (toString yamlPath) ".";
   podDef = pkgs.writeText "${yamlNameNoExt}.yaml" (
-    lib.foldl (content: replacement:
-      lib.strings.replaceStrings [replacement.search] [replacement.replace] content
+    lib.foldl (content: r:
+      lib.strings.replaceStrings [r.search] [r.replace] content
     ) (builtins.readFile yamlPath) _replacements
   );
 in
@@ -55,15 +54,6 @@ in
     subGidRanges = [{ startGid = 100000; count = 65536; }];
   };
   users.groups.${gName} = {};
-
-  # Let the user own the data directory
-  # systemd.tmpfiles.rules = [
-  #   # Note: 3 bits <read><write><exec>, 3 3bit values <owner><group><world>
-  #   # Example: 777 -> 111,111,111 -> read, write, exec for all
-  #   # Example: 750 -> 111,111,111 -> rwe for owner, re for group, nothing for world
-  #   # Q: why the leading 0?
-  #   "d ${uHome} 0750 ${uName} ${gName} - -"
-  # ];
 
   systemd.services.${sName} = {
     description = "Run podman ${sName}";
