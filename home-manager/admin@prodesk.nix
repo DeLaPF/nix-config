@@ -39,9 +39,6 @@
   };
 
   programs = {
-    # TODO: Would be nice to have an alternative,
-    # but need to specify extensions dev mode and enable force dark browser
-    # brave://extensions brave://flags
     chromium = {
       enable = true;
       package = pkgs.brave;
@@ -49,18 +46,6 @@
         { id = "cjpalhdlnbpafiamejdnhcphjbkeiagm"; }  # uBlock Origin
         { id = "chphlpgkkbolifaimnlloiipkdnihall"; }  # OneTab
         { id = "gfbliohnnapiefjpjlpjnehglfpaknnc"; }  # SurfingKeys
-        # TODO: determine better method for handling and loading config
-        # https://raw.githubusercontent.com/rose-pine/surfingkeys/main/dist/rose-pine.js
-        # Once config loaded add below then unset
-        # Additional config
-        # api.map('H', 'history.back');
-        # api.map('L', 'history.forward');
-        # api.map('J', 'previousTab');
-        # api.map('K', 'nextTab');
-        # // api.unmap('S');
-        # // api.unmap('D');
-        # // api.unmap('E');
-        # // api.unmap('R');
       ];
     };
     gh.enable = true;
@@ -78,11 +63,6 @@
       defaultEditor = true;
     };
     starship.enable = true;
-  };
-
-  dconf = {
-    enable = true;
-    settings."org/gnome/desktop/interface".color-scheme = "prefer-dark";
   };
 
   # Nicely reload system units when changing configs
