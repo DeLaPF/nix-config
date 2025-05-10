@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: minecraft-server
+spec:
+  containers:
+  - name: minecraft
+    image: docker.io/itzg/minecraft-server:latest
+    env:
+    - name: EULA
+      value: "TRUE"
+    - name: MEMORY
+      value: "{{MEMORY}}"
+    ports:
+    - containerPort: 25565
+      hostPort: "{{HOST_PORT}}"
+      protocol: TCP
+    volumeMounts:
+    - mountPath: /data
+      name: minecraft-data
+  volumes:
+  - name: minecraft-data
+    hostPath:
+      path: "{{HOST_DIR}}"
+      type: DirectoryOrCreate

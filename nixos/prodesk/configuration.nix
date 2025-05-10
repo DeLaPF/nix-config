@@ -3,6 +3,10 @@
   imports = [
     ./hardware-configuration.nix
     ../modules/print-server.nix
+
+    # Parameterized module import
+    # (could be called multiple times for multiple services)
+    (import ../modules/minecraft/service.param.nix {})
   ];
 
   # Bootloader.
