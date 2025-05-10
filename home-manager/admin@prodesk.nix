@@ -28,6 +28,35 @@
         hash = "sha256-1agBX7r4tEdG3fRvsuXHj+YfhsIj0eLLA1Wl8fP+UbQ=";
       };
     };
+    file.".addrc" = {
+      text =
+        ''
+          arglist_to_str() {
+            str=""
+            for arg in "''${@}"; do
+                str+="$arg "
+            done
+            echo "''${str% }"
+          }
+
+          run_command_string_as_rel() {
+            str=$(arglist_to_str ''${@:2})
+            sudo -u $1 sh -c "$str"
+          }
+          alias rcar=run_command_string_as_rel
+
+          run_command_string_as() {
+            str=$(arglist_to_str ''${@:2})
+            rcar $1 "cd ~ && $str"
+          }
+          alias rca=run_command_string_as
+
+          minecraft_cli() {
+            rca $1 podman exec -i $2 rcon-cli
+          }
+          alias mcli=minecraft_cli
+        '';
+    };
     packages = with pkgs; [
       # Devenv
       gcc
