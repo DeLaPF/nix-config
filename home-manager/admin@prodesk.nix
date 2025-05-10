@@ -53,14 +53,16 @@
         # https://raw.githubusercontent.com/rose-pine/surfingkeys/main/dist/rose-pine.js
         # Once config loaded add below then unset
         # Additional config
-        # api.map('H', 'history.back');
-        # api.map('L', 'history.forward');
-        # api.map('J', 'previousTab');
-        # api.map('K', 'nextTab');
-        # // api.unmap('S');
-        # // api.unmap('D');
-        # // api.unmap('E');
-        # // api.unmap('R');
+        # Ref: https://github.com/brookhong/Surfingkeys/blob/3d799e10c38631fcf314f3dab0bfff54372e5237/src/content_scripts/common/default.js
+        # api.mapkey('H', 'History back', () => history.go(-1));
+        # api.mapkey('L', 'History forward', () => history.go(1));
+        # api.unmap('S');
+        # api.unmap('D');
+
+        # api.mapkey('J', 'Tab Up', () => api.RUNTIME("previousTab"));
+        # api.mapkey('K', 'Tab Down', () => api.RUNTIME("nextTab"));
+        # api.unmap('E');
+        # api.unmap('R');
       ];
     };
     gh.enable = true;
