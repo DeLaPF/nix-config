@@ -36,13 +36,11 @@ let
   );
 in
 {
-  # environment.systemPackages = with pkgs; [ shadow ];
   virtualisation.podman = {
     enable = true;
     defaultNetwork.settings.dns_enabled = true;
   };
   networking.firewall.allowedTCPPorts = [ hostPort ];
-  # boot.kernel.sysctl."kernel.unprivileged_userns_clone" = lib.mkDefault 1;
 
   users.users.${uName} = {
     isSystemUser = true;
@@ -50,7 +48,6 @@ in
     home = uHome;
     createHome = true;
     linger = true;
-    # packages = with pkgs; [ shadow ];
 
     # Required to allow podman to map internal ids to host ids
     subUidRanges = [{ startUid = 100000; count = 65536; }];
@@ -65,7 +62,6 @@ in
     requires = [ "network-online.target" "podman.service" ];
     wantedBy = [ "multi-user.target" ];
 
-    # path = [ pkgs.shadow ];
     path = [ "/run/wrappers" ];
     serviceConfig = {
       Type = "simple";
