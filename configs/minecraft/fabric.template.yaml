@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: fabric
+spec:
+  containers:
+  - name: fmc
+    image: docker.io/itzg/minecraft-server:latest
+    env:
+    - name: EULA
+      value: "TRUE"
+    - name: MEMORY
+      value: "{{MEMORY}}"
+    - name: TYPE
+      value: FABRIC
+    - name: VERSION
+      value: 1.21.1
+    - name: SEED
+      value: 31563250179158
+    - name: REMOVE_OLD_MODS
+      value: "TRUE"
+    - name: MODS
+      value: |
+        https://cdn.modrinth.com/data/P7dR8mSH/versions/73Q31My7/fabric-api-0.116.0%2B1.21.1.jar
+        https://cdn.modrinth.com/data/Ua7DFN59/versions/CbIBPwz2/YungsApi-1.21.1-Fabric-5.1.5.jar
+        https://cdn.modrinth.com/data/8BmcQJ2H/versions/PEvrTvgj/geckolib-fabric-1.21.1-4.7.5.1.jar
+        https://cdn.modrinth.com/data/9s6osm5g/versions/HpMb5wGb/cloth-config-15.0.140-fabric.jar
+        https://cdn.modrinth.com/data/s3dmwKy5/versions/lbSHOhee/GlitchCore-fabric-1.21.1-2.1.0.0.jar
+        https://cdn.modrinth.com/data/kkmrDlKT/versions/XNtIBXyQ/TerraBlender-fabric-1.21.1-4.1.0.8.jar
+        https://cdn.modrinth.com/data/8YcE8y4T/versions/zuCKHu8U/Ribbits-1.21.1-Fabric-4.1.2.jar
+        https://cdn.modrinth.com/data/HXF82T3G/versions/rSUYTY7b/BiomesOPlenty-fabric-1.21.1-21.1.0.9.jar
+    ports:
+    - containerPort: 25565
+      hostPort: "{{HOST_PORT}}"
+      protocol: TCP
+    volumeMounts:
+    - mountPath: /data
+      name: minecraft-data
+  volumes:
+  - name: minecraft-data
+    hostPath:
+      path: "{{HOST_DIR}}"
+      type: DirectoryOrCreate

@@ -1,12 +1,17 @@
-{ config, pkgs, ... }:
+{ config, pkgs, outputs, ... }:
 {
   imports = [
     ./hardware-configuration.nix
     ../modules/print-server.nix
 
+    # NOTE: Only update on boot to avoid service conflicts:
+    # `sudo nixos-rebuild boot --flake .`
     # Parameterized module import
     # (could be called multiple times for multiple services)
-    (import ../modules/minecraft/service.param.nix {})
+    (import ../modules/minecraft/service.param.nix {
+      yamlPath=outputs.configs + "/minecraft/fabric.template.yaml";
+      sName="fabric-server";
+    })
   ];
 
   # Bootloader.

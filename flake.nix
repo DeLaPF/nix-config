@@ -54,5 +54,7 @@
         modules = [ ./home-manager/${user2+".nix"} ];
       };
     };
+
+    configs = ./configs;
   };
 }
