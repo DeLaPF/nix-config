@@ -64,6 +64,8 @@
       ripgrep
       stow
       tmux
+
+      moonlight-qt
     ];
   };
 
