@@ -9,8 +9,9 @@
     # Parameterized module import
     # (could be called multiple times for multiple services)
     (import ../modules/minecraft/service.param.nix {
-      yamlPath=outputs.configs + "/minecraft/fabric.template.yaml";
-      sName="fabric-server";
+      yamlPath = outputs.configs + "/minecraft/fabric.template.yaml";
+      sName = "fabric-server";
+      replacements = { HOST_PORT = "25565"; MAX_MEMORY = "8G"; };
     })
   ];
 

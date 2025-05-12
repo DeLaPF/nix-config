@@ -55,6 +55,11 @@
             rca $1 podman exec -i $2 rcon-cli
           }
           alias mcli=minecraft_cli
+
+          minecraft_logs() {
+            rca $1 cat "~/$2/logs/latest.log"
+          }
+          alias mcl=minecraft_logs
         '';
     };
     packages = with pkgs; [
