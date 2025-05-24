@@ -3,6 +3,7 @@
   imports = [
     ./hardware-configuration.nix
     ../modules/print-server.nix
+    ../modules/file-assertions.nix
 
     # NOTE: Only update on boot to avoid service conflicts:
     # `sudo nixos-rebuild boot --flake .`
@@ -13,6 +14,12 @@
       sName = "fabric-server";
       replacements = { HOST_PORT = "25565"; MAX_MEMORY = "8G"; };
     })
+  ];
+
+  fileAssertions = [
+    { path = "/etc/wireguard/wg0.conf"; }
+    # { path = "/etc/nixos/sysconf/wireguard/wg0.conf"; }
+    # { path = "/home/admin/TEST"; }
   ];
 
   # Bootloader.
@@ -106,6 +113,7 @@
   environment.systemPackages = with pkgs; [
     vim
     home-manager
+    stow
   ];
 
   programs = {
