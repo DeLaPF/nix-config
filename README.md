@@ -25,10 +25,12 @@ thus the result of the checks can be used during eval time, however than can be 
 
 ### sysconfig
 Basic example for wireguard, but can be extended to any config file.
-Create a local directory `/etc/nixos/sysconfig`:
-- `etc`
- - `wireguard`
-  - `wg0.conf`
+- Create a local directory `/etc/nixos/sysconfig`:
+ - `etc`
+  - `wireguard`
+   - `wg0.conf`
 containing the instance's unique wireguard config.
-From `sysconfig` run `sudo stow -t / .` to add config to etc.
-This can be undone with `sudo stow -D -t / .`
+- From `sysconfig` run `sudo stow -t / .` to add config to etc.
+ - This can be undone with `sudo stow -D -t / .`
+- Add a systemd.services.wg0 to handle startup of the tunnel automatically
+- Or, alternatively, handle manually at runtime with `wg-quick <up|down> wg0`
