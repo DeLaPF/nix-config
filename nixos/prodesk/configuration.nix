@@ -17,10 +17,11 @@
   ];
 
   fileAssertions = [
-    { path = "/etc/wireguard/wg0.conf"; }
-    # { path = "/etc/nixos/sysconf/wireguard/wg0.conf"; }
-    # { path = "/home/admin/TEST"; }
+    { path_str = "/etc/wireguard/wg0.conf"; }
+    # { path_str = "/etc/wireguard/wg1.conf"; }
+    # { path_str = "/etc/wireguard/wg1.conf"; fatal = false; }
   ];
+  # extraSandboxPaths = [ "/etc/nixos/sysconf" ];
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
