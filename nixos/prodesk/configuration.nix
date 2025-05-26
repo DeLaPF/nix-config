@@ -3,6 +3,7 @@
   imports = [
     ./hardware-configuration.nix
     ../modules/print-server.nix
+    ../modules/file-assertions.nix
 
     # NOTE: Only update on boot to avoid service conflicts:
     # `sudo nixos-rebuild boot --flake .`
@@ -15,9 +16,19 @@
     })
   ];
 
+  # NOTE: all new paths need to be added and built with fatal = false first
+  # otherwise a weird issue with extra-sandbox-paths doesn't allow the files to be seen
+  fileAssertions = [
+    { path_str = "/etc/wireguard/wg0.conf"; }
+  ];
+  # NOTE: if using symlinks add symlinked dir as extra path
+  # it sometimes works without, but is super spotty
+  extraSandboxPaths = [ "/etc/nixos/sysconf" ];
+
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  boot.kernelModules = [ "wireguard" ];
 
   networking.hostName = "prodesk"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -106,6 +117,8 @@
   environment.systemPackages = with pkgs; [
     vim
     home-manager
+    stow
+    wireguard-tools
   ];
 
   programs = {
