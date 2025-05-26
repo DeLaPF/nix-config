@@ -16,12 +16,15 @@
     })
   ];
 
+  # NOTE: all new paths need to be added and built with fatal = false first
+  # otherwise a weird issue with extra-sandbox-paths doesn't allow the files to be seen
   fileAssertions = [
     { path_str = "/etc/wireguard/wg0.conf"; }
-    # { path_str = "/etc/wireguard/wg1.conf"; }
-    # { path_str = "/etc/wireguard/wg1.conf"; fatal = false; }
+    # { path_str = "/etc/wireguard/wg1.conf"; fatal = false; }  # test warning
   ];
-  # extraSandboxPaths = [ "/etc/nixos/sysconf" ];
+  # NOTE: if using symlinks add symlinked dir as extra path
+  # it sometimes works without, but is super spotty
+  extraSandboxPaths = [ "/etc/nixos/sysconf" ];
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
