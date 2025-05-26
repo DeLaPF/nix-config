@@ -9,20 +9,19 @@
 `home-manager switch --flake .#username@hostname`
 
 ## File Assertions (`nixos/modules/file-assertions.nix`)
-An attempt at a solution to the problem of secrets in nixos.
+(An attempt at a solution to the problem of secrets in nixos.)
+
 I am not a fan of storing encrypted secrets in plainview (as occurs with sops/age).
 It feels like there is somewhat of a consensus that nixos must be hermetic, thus all files
-(including those containing secrets) must be managed by nix. But this isn't event true for sops/age,
+(including those containing secrets) must be managed by nix. But this isn't even true for sops/age,
 since the private key used to encrypt everything is not managed by nix.
 If sops/age rely on the non-hermetic machine environment, while still maintaining
 a level of reasonable declarative-ness, why can't I do the same?
-I can declare any number of files that expected to exist (and where), and specify
-whether them not existing should break the build (fatal/assert) or just warn.
-This feels like it could be an ok solution for secrets (could be better to support sops/age for encryption as well)
-and a very good solution for instance specify config (relating to the unique setup of a given machine from a shared config)
-like ssh keys, and wireguard configuration
 
-This solution could arguably be made better by requiring hashes for the files that can be checked against.
+With `file-assertions` I can declare any number of files that are expected to exist (and where), and specify
+whether them not existing should break the build or just warn (fatal = true or false).
+These checks are handled at build time as they require access to files outside of the sandbox,
+thus the result of the checks can be used during eval time, however than can be used for activation and run time.
 
 ### sysconfig
 Basic example for wireguard, but can be extended to any config file.
