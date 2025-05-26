@@ -20,7 +20,6 @@
   # otherwise a weird issue with extra-sandbox-paths doesn't allow the files to be seen
   fileAssertions = [
     { path_str = "/etc/wireguard/wg0.conf"; }
-    # { path_str = "/etc/wireguard/wg1.conf"; fatal = false; }  # test warning
   ];
   # NOTE: if using symlinks add symlinked dir as extra path
   # it sometimes works without, but is super spotty
@@ -29,6 +28,7 @@
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  boot.kernelModules = [ "wireguard" ];
 
   networking.hostName = "prodesk"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -118,6 +118,7 @@
     vim
     home-manager
     stow
+    wireguard-tools
   ];
 
   programs = {
