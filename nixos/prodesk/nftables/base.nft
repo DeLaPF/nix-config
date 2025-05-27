@@ -1,0 +1,34 @@
+table inet filter {
+  chain input {
+    type filter hook input priority 0; policy drop;
+    
+    # Common accept rules
+    ct state established,related accept
+    iifname lo accept
+    
+    # ICMP
+    ip protocol icmp accept
+    ip6 nexthdr icmpv6 accept
+  }
+
+  chain forward {
+    type filter hook forward priority 0; policy drop;
+  }
+
+  chain output {
+    # Accept by defualt
+    # type filter hook output priority 0; policy accept;
+    # skgid $vpnonlyGID oifname != "tun0" drop 
+
+    # Drop by default
+    type filter hook output priority 0; policy drop;
+
+    # allow non vponly members out
+    skgid != $vpnonlyGID accept
+
+    # Add tag to vpnonly traffic
+    # skgid $vpnonlyGID meta mark set $vpnonlyFWMark
+    # Allow vpnonly members out only through vpn interface
+    # skgid $vpnonlyGID oifname "wg0" accept
+  }
+}

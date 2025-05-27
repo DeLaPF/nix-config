@@ -34,3 +34,15 @@ containing the instance's unique wireguard config.
     - This can be undone with `sudo stow -D -t / .`
 - Add a systemd.services.wg0 to handle startup of the tunnel automatically
 - Or, alternatively, handle manually at runtime with `wg-quick <up|down> wg0`
+
+## wg-quick
+For mark isolated vpn routing:
+- Disable DNS
+- Add to Interface below Address (56910 is the name of the table, easiest to just name it after the listening port)
+```
+# Disable autrouting and create table for vpn
+Table = off
+PostUp = ip rule add fwmark $VPNONLY_FW_MARK table 56910
+PostUp = ip route add 0.0.0.0/0 dev wg0 table 56910
+```
+- TODO: look into how to setup VPN DNS properly or use a non tracking provider for all

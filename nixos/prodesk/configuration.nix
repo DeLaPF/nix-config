@@ -1,7 +1,10 @@
-{ config, pkgs, outputs, ... }:
+{ config, pkgs, lib, outputs, ... }:
 {
   imports = [
     ./hardware-configuration.nix
+    ./nftables.nix
+    ./vpn-user.nix
+
     ../modules/print-server.nix
     ../modules/file-assertions.nix
 
@@ -15,6 +18,8 @@
       replacements = { HOST_PORT = "25565"; MAX_MEMORY = "8G"; };
     })
   ];
+
+  vpnUser.enable = true;
 
   # NOTE: all new paths need to be added and built with fatal = false first
   # otherwise a weird issue with extra-sandbox-paths doesn't allow the files to be seen
@@ -139,16 +144,6 @@
 
   # Enable the OpenSSH daemon.
   # services.openssh.enable = true;
-
-  # Open ports in the firewall.
-  # TODO: switch to using raw nftables
-  networking.firewall = {
-    enable = true;
-  };
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

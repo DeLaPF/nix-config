@@ -1,0 +1,6 @@
+table inet filter {
+  chain input {
+    tcp dport 631 accept
+    udp dport 5353 accept
+  }
+}

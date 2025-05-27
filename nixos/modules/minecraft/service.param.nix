@@ -9,7 +9,6 @@
   uName ? "minecraft",
   gName ? "minecraft",
   suHome ? "/var/lib/su_home",
-  hostPort ? 25565,
   replacements ? {
     HOST_PORT = "25565";
     MEMORY = "4G";
@@ -40,7 +39,6 @@ in
     enable = true;
     defaultNetwork.settings.dns_enabled = true;
   };
-  networking.firewall.allowedTCPPorts = [ hostPort ];
 
   users.users.${uName} = {
     isSystemUser = true;
