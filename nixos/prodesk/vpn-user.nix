@@ -1,7 +1,6 @@
 { config, pkgs, lib, ... }:
 let
   uName = "vpnuser";
-  gName = "vpnuser";
   uHome = "/var/lib/${uName}";
 in
 {
@@ -18,8 +17,7 @@ in
     users.users.${uName} = {
       isSystemUser = true;
       description = "VPN User";
-      group = gName;
-      extraGroups = [ "vpnonly" ];
+      group = "vpnonly";
 
       home = uHome;
       createHome = true;
@@ -31,6 +29,5 @@ in
       shell = pkgs.zsh;
       packages = [];
     };
-    users.groups.${gName} = {};
   };
 }

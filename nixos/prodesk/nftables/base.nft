@@ -16,19 +16,27 @@ table inet filter {
   }
 
   chain output {
-    # Accept by defualt
+    # # Accept by defualt
     # type filter hook output priority 0; policy accept;
-    # skgid $vpnonlyGID oifname != "tun0" drop 
+    # skgid $vpnonlyGID oifname != "wg0" drop
+    # meta mark $vpnonlyFWMark accept
 
-    # Drop by default
-    type filter hook output priority 0; policy drop;
+    # # Drop by default
+    # type filter hook output priority 0; policy drop;
 
-    # allow non vponly members out
-    skgid != $vpnonlyGID accept
+    # # allow marked traffic out
+    # meta mark $vpnonlyFWMark accept
 
-    # Add tag to vpnonly traffic
-    # skgid $vpnonlyGID meta mark set $vpnonlyFWMark
-    # Allow vpnonly members out only through vpn interface
-    # skgid $vpnonlyGID oifname "wg0" accept
+    # # allow non vponly members out
+    # meta skgid != $vpnonlyGID accept
+
+    # # Add tag to vpnonly traffic
+    # meta skgid $vpnonlyGID meta mark set $vpnonlyFWMark
+
+    # # Allow vpnonly members out only through vpn interface
+    # # meta skgid $vpnonlyGID oifname "wg0" accept
+
+    # meta mark $vpnonlyFWMark log prefix "[VPN-DROPPED] " accept
+    # meta skgid $vpnonlyGID log prefix "[VPN-DROPPED] " drop
   }
 }

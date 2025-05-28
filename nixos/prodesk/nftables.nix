@@ -10,7 +10,7 @@
   config =
   let
     vpnonlyGID = 5000;  # arbitrary
-    vpnonlyFWMark = 200;  # arbitrary, but derived env var must be used in wg config
+    vpnonlyFWMark = lib.fromHexString "0xc8";  # arbitrary, but derived env var must be used in wg config
   in
   {
     environment.sessionVariables = {
