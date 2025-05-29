@@ -3,16 +3,12 @@
 # instead include like: `(import <path> {<required_args>})` in `imports` list
 
 {
-  # TODO: type check/assert
-  yamlPath ? ./minecraft.template.yaml,
-  sName ? "minecraft-server",
-  uName ? "minecraft",
-  gName ? "minecraft",
+  yamlPath,
+  sName,
+  uName,
+  gName,
   suHome ? "/var/lib/su_home",
-  replacements ? {
-    HOST_PORT = "25565";
-    MEMORY = "4G";
-  },
+  replacements ? {},
 }:
 { config, lib, pkgs, ... }:
 let
@@ -27,12 +23,13 @@ let
     replace = value;
   }) replwHostDir;
   
+  wantsReplacment = (builtins.length (builtins.attrNames replacements)) > 0;
   yamlNameNoExt = lib.strings.nameFromURL (toString yamlPath) ".";
-  podDef = pkgs.writeText "${yamlNameNoExt}.yaml" (
+  podDef = if wantsReplacment then (pkgs.writeText "${yamlNameNoExt}.yaml" (
     lib.foldl (content: r:
       lib.strings.replaceStrings [r.search] [r.replace] content
     ) (builtins.readFile yamlPath) _replacements
-  );
+  )) else toString yamlPath;
 in
 {
   virtualisation.podman = {

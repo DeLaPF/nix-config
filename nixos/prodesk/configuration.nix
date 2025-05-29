@@ -9,9 +9,9 @@
     # `sudo nixos-rebuild boot --flake .`
     # Parameterized module import
     # (could be called multiple times for multiple services)
-    (import ../modules/minecraft/service.param.nix {
+    (import ../modules/podman/service.param.nix {
       yamlPath = outputs.configs + "/minecraft/fabric.template.yaml";
-      sName = "fabric-server";
+      sName = "fabric-server"; uName = "minecraft"; gName = "minecraft";
       replacements = { HOST_PORT = "25565"; MAX_MEMORY = "8G"; };
     })
   ];
