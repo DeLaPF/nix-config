@@ -16,6 +16,20 @@
     })
   ];
 
+  # Bootloader.
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
+  boot.kernelModules = [ "wireguard" ];
+
+  # Networking
+  networking.hostName = "prodesk"; # Define your hostname.
+  networking.networkmanager.enable = true;
+  networking.firewall.enable = true;
+  networking.firewall.allowedTCPPorts = [
+    25565  # MC Server
+  ];
+  # services.openssh.enable = true;
+
   # NOTE: all new paths need to be added and built with fatal = false first
   # otherwise a weird issue with extra-sandbox-paths doesn't allow the files to be seen
   fileAssertions = [
@@ -24,21 +38,6 @@
   # NOTE: if using symlinks add symlinked dir as extra path
   # it sometimes works without, but is super spotty
   extraSandboxPaths = [ "/etc/nixos/sysconf" ];
-
-  # Bootloader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-  boot.kernelModules = [ "wireguard" ];
-
-  networking.hostName = "prodesk"; # Define your hostname.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-
-  # Enable networking
-  networking.networkmanager.enable = true;
 
   # Set your time zone.
   time.timeZone = "America/New_York";
@@ -99,9 +98,7 @@
     description = "admin";
     extraGroups = [ "networkmanager" "wheel" "lpadmin" ];
     shell = pkgs.zsh;
-    packages = with pkgs; [
-    #  thunderbird
-    ];
+    packages = with pkgs; [];
   };
 
   # Allow unfree packages
@@ -134,21 +131,6 @@
   #   enable = true;
   #   enableSSHSupport = true;
   # };
-
-  # List services that you want to enable:
-
-  # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
-
-  # Open ports in the firewall.
-  # TODO: switch to using raw nftables
-  networking.firewall = {
-    enable = true;
-  };
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
