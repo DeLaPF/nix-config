@@ -14,6 +14,13 @@
       sName = "fabric-server"; uName = "minecraft"; gName = "minecraft";
       replacements = { HOST_PORT = "25565"; MAX_MEMORY = "8G"; };
     })
+
+    (import ../modules/podman/service.param.nix {
+      # Make sure in location others can access (world-x perms for all parent dirs)
+      # and read (world-r perm for for file)
+      yamlPath = "/var/lib/shared/rip.yaml";
+      sName = "rip-pod"; uName = "rip"; gName = "rip";
+    })
   ];
 
   # Bootloader.
@@ -109,6 +116,22 @@
     auto-optimise-store = true;
   };
 
+  # TODO: this may be better to have in an optional module because hardware
+  # Enable intel QSV for hardware transcoding
+  hardware.graphics = {
+    enable = true;
+    extraPackages = with pkgs; [
+      intel-media-driver
+      intel-compute-runtime # OpenCL filter support (hardware tonemapping and subtitle burn-in)
+      intel-media-sdk # QSV up to 11th gen
+    ];
+  };
+
+  # Jellyfin
+  services.jellyfin = {
+    enable = true;
+  };
+
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
@@ -116,6 +139,10 @@
     home-manager
     stow
     wireguard-tools
+
+    jellyfin
+    jellyfin-web
+    jellyfin-ffmpeg
   ];
 
   programs = {

@@ -63,7 +63,7 @@ in
       RemainAfterExit = true;
       User = uName;
       Group = gName;
-      ExecStart = "${pkgs.podman}/bin/podman play kube --replace ${podDef} --userns=keep-id";
+      ExecStart = "${pkgs.podman}/bin/podman play kube --replace --userns=keep-id --log-driver=k8s-file ${podDef}";
       ExecStop = "${pkgs.podman}/bin/podman pod stop ${sName}";
       ExecStopPost = "${pkgs.podman}/bin/podman pod rm ${sName}";
     };
