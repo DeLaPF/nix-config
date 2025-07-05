@@ -10,17 +10,17 @@
     # Parameterized module import
     # (could be called multiple times for multiple services)
     (import ../modules/podman/service.param.nix {
-      yamlPath = outputs.configs + "/minecraft/fabric.template.yaml";
-      sName = "fabric-server"; uName = "minecraft"; gName = "minecraft";
-      replacements = { HOST_PORT = "25565"; MAX_MEMORY = "8G"; };
-    })
-
-    (import ../modules/podman/service.param.nix {
       # Make sure in location others can access (world-x perms for all parent dirs)
       # and read (world-r perm for for file)
-      yamlPath = "/var/lib/shared/rip.yaml";
-      sName = "rip-pod"; uName = "rip"; gName = "rip";
+      yamlPath = "/var/lib/shared/fabric-mc.yaml";
+      sName = "fabric-server"; uName = "minecraft"; gName = "minecraft";
+      forceRestart = true;
+      # NOTE: `replacements` are not allowed for untracked templates without `--impure`
     })
+    # (import ../modules/podman/service.param.nix {
+    #   yamlPath = "/var/lib/shared/rip.yaml";
+    #   sName = "rip-pod"; uName = "rip"; gName = "rip";
+    # })
   ];
 
   # Bootloader.
