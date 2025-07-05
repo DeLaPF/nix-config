@@ -12,9 +12,10 @@
     (import ../modules/podman/service.param.nix {
       # Make sure in location others can access (world-x perms for all parent dirs)
       # and read (world-r perm for for file)
+      # NOTE: if the config is external manually restart service when updated
+      # `sudo systemctl restart <sName>`
       yamlPath = "/var/lib/shared/fabric-mc.yaml";
       sName = "fabric-server"; uName = "minecraft"; gName = "minecraft";
-      forceRestart = true;
       # NOTE: `replacements` are not allowed for untracked templates without `--impure`
     })
     # (import ../modules/podman/service.param.nix {

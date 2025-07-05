@@ -9,7 +9,6 @@
   gName,
   suHome ? "/var/lib/su_home",
   replacements ? {},
-  forceRestart ? false,
 }:
 { config, lib, pkgs, ... }:
 let
@@ -50,12 +49,6 @@ in
     subGidRanges = [{ startGid = 100000; count = 65536; }];
   };
   users.groups.${gName} = {};
-
-  system.activationScripts = {
-    "forceRestart${sName}" = if forceRestart then ''
-      ${pkgs.systemd}/bin/systemctl restart ${sName}.service || true
-    '' else "";
-  };
 
   systemd.services.${sName} = {
     enable = true;
