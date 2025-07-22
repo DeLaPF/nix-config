@@ -36,6 +36,9 @@
   networking.firewall.allowedTCPPorts = [
     25565  # MC Server
   ];
+  networking.firewall.allowedUDPPorts = [
+    24454  # MC Simple VC
+  ];
   # services.openssh.enable = true;
 
   # NOTE: all new paths need to be added and built with fatal = false first
@@ -101,12 +104,18 @@
   # services.xserver.libinput.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.admin = {
-    isNormalUser = true;
-    description = "admin";
-    extraGroups = [ "networkmanager" "wheel" "lpadmin" ];
-    shell = pkgs.zsh;
-    packages = with pkgs; [];
+  users.users = {
+    admin = {
+      isNormalUser = true;
+      description = "admin";
+      extraGroups = [ "networkmanager" "wheel" "lpadmin" ];
+      shell = pkgs.zsh;
+      packages = with pkgs; [];
+    };
+    media = {
+      isNormalUser = true;
+      shell = pkgs.zsh;
+    };
   };
 
   # Allow unfree packages

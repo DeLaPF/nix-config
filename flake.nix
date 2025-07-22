@@ -41,6 +41,7 @@
       let
         user1 = "admin@refrigeratarr";
         user2 = "admin@prodesk";
+        user3 = "media@prodesk";
       in
     {
       ${user1} = home-manager.lib.homeManagerConfiguration {
@@ -52,6 +53,11 @@
         pkgs = nixpkgs.legacyPackages.x86_64-linux;
         extraSpecialArgs = {inherit inputs outputs;};
         modules = [ ./home-manager/${user2+".nix"} ];
+      };
+      ${user3} = home-manager.lib.homeManagerConfiguration {
+        pkgs = nixpkgs.legacyPackages.x86_64-linux;
+        extraSpecialArgs = {inherit inputs outputs;};
+        modules = [ ./home-manager/${user3+".nix"} ];
       };
     };
 
