@@ -33,7 +33,18 @@
       };
       ${sys2} = nixpkgs.lib.nixosSystem {
         specialArgs = {inherit inputs outputs;};
-        modules = [ ./nixos/${sys2}/configuration.nix ];
+        modules = [
+          ./nixos/${sys2}/configuration.nix
+
+          home-manager.nixosModules.home-manager {
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              extraSpecialArgs = { inherit inputs; };
+              users.media = import ./home-manager/media_prodesk.nix;
+            };
+          }
+        ];
       };
     };
 
@@ -41,7 +52,6 @@
       let
         user1 = "admin@refrigeratarr";
         user2 = "admin@prodesk";
-        user3 = "media@prodesk";
       in
     {
       ${user1} = home-manager.lib.homeManagerConfiguration {
@@ -53,11 +63,6 @@
         pkgs = nixpkgs.legacyPackages.x86_64-linux;
         extraSpecialArgs = {inherit inputs outputs;};
         modules = [ ./home-manager/${user2+".nix"} ];
-      };
-      ${user3} = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages.x86_64-linux;
-        extraSpecialArgs = {inherit inputs outputs;};
-        modules = [ ./home-manager/${user3+".nix"} ];
       };
     };
 
