@@ -18,6 +18,10 @@
       sName = "fabric-server"; uName = "minecraft"; gName = "minecraft";
       # NOTE: `replacements` are not allowed for untracked templates without `--impure`
     })
+    (import ../modules/podman/service.param.nix {
+      yamlPath = "/var/lib/shared/wg-easy.yaml";
+      sName = "wge"; uName = ""; gName = ""; asRoot = true;
+    })
     # (import ../modules/podman/service.param.nix {
     #   yamlPath = "/var/lib/shared/rip.yaml";
     #   sName = "rip-pod"; uName = "rip"; gName = "rip";
@@ -38,6 +42,7 @@
   ];
   networking.firewall.allowedUDPPorts = [
     24454  # MC Simple VC
+    51825  # wg-easy
   ];
   # services.openssh.enable = true;
 

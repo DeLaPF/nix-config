@@ -8,6 +8,7 @@
   uName,
   gName,
   suHome ? "/var/lib/su_home",
+  asRoot ? false,
   replacements ? {},
 }:
 { config, lib, pkgs, ... }:
@@ -37,18 +38,20 @@ in
     defaultNetwork.settings.dns_enabled = true;
   };
 
-  users.users.${uName} = {
-    isSystemUser = true;
-    group = gName;
-    home = uHome;
-    createHome = true;
-    linger = true;
+  users = lib.mkIf (!asRoot) {
+    users.${uName} = {
+      isSystemUser = true;
+      group = gName;
+      home = uHome;
+      createHome = true;
+      linger = true;
 
-    # Required to allow podman to map internal ids to host ids
-    subUidRanges = [{ startUid = 100000; count = 65536; }];
-    subGidRanges = [{ startGid = 100000; count = 65536; }];
+      # Required to allow podman to map internal ids to host ids
+      subUidRanges = [{ startUid = 100000; count = 65536; }];
+      subGidRanges = [{ startGid = 100000; count = 65536; }];
+    };
+    groups.${gName} = {};
   };
-  users.groups.${gName} = {};
 
   systemd.services.${sName} = {
     enable = true;
@@ -61,8 +64,8 @@ in
     serviceConfig = {
       Type = "simple";
       RemainAfterExit = true;
-      User = uName;
-      Group = gName;
+      User = if asRoot then "root" else uName;
+      Group = if asRoot then "root" else gName;
       ExecStart = "${pkgs.podman}/bin/podman play kube --replace --userns=keep-id --log-driver=k8s-file ${podDef}";
       ExecStop = "${pkgs.podman}/bin/podman pod stop ${sName}";
       ExecStopPost = "${pkgs.podman}/bin/podman pod rm ${sName}";
