@@ -7,6 +7,9 @@ let
   assert_file = { path_str, msg, fatal }: pkgs.stdenv.mkDerivation {
     name = "assert-${(baseNameOf path_str)}";
     phases = [ "buildPhase" "installPhase" ];
+    # TODO: `fatal` doesn't quite work as a it seems that the nix functions are always evaluated regardless if the condition is met
+    # this should have been obvious, though it does make emitting a proper warning more difficult (and thus todo)
+    # it may just have to be that fatal is not an option since we can only reliable emit message on "fatal" error
     buildPhase = ''
       if [ ! -e "${path_str}" ]; then
         ${

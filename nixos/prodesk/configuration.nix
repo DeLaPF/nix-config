@@ -4,6 +4,7 @@
     ./hardware-configuration.nix
     ../modules/print-server.nix
     ../modules/file-assertions.nix
+    ../modules/duckdns.nix
 
     # NOTE: Only update on boot to avoid service conflicts:
     # `sudo nixos-rebuild boot --flake .`
