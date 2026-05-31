@@ -40,6 +40,7 @@
   networking.firewall.enable = true;
   networking.firewall.allowedTCPPorts = [
     25565  # MC Server
+    5555   # mtab
   ];
   networking.firewall.allowedUDPPorts = [
     24454  # MC Simple VC
@@ -155,6 +156,11 @@
     home-manager
     stow
     wireguard-tools
+    python3
+    uv
+
+    gptfdisk
+    smartmontools
 
     jellyfin
     jellyfin-web

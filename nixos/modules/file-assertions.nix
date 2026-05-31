@@ -1,26 +1,21 @@
 { config, lib, pkgs, ... }:
 let
-  formatError = msg: ''echo -e "\033[1;31mERROR:\033[0m ${msg}" >&2'';
-  # NOTE: ESC must be used (typed with ctrl+v ESC (ascii 27))
-  formatWarning = msg: builtins.trace "[1;33mWARNING:[0m ${msg}" "echo ''";
+  t = ''$(date --utc +"%Y-%m-%dT%H:%M:%SZ")'';
+  formatError = msg: ''echo -e "\033[1;31mERROR:\033[0m ${msg} (${t})" >&2'';
+  formatWarning = msg: ''echo -e "\033[1;33mWARNING:\033[0m ${msg} (${t})" >&2'';
+  # "assert-${(baseNameOf path_str)}"
+  assert_file = { path_str, msg, fatal }: pkgs.runCommand "file-assert" {} ''
+    if [ ! -e "${path_str}" ]; then
+      ${
+        (if fatal then formatError else formatWarning)
+        (if msg != "" then msg else "Missing file: ${path_str}")
+      }
+      ${if fatal then "exit 1" else ""}
+    fi
 
-  assert_file = { path_str, msg, fatal }: pkgs.stdenv.mkDerivation {
-    name = "assert-${(baseNameOf path_str)}";
-    phases = [ "buildPhase" "installPhase" ];
-    # TODO: `fatal` doesn't quite work as a it seems that the nix functions are always evaluated regardless if the condition is met
-    # this should have been obvious, though it does make emitting a proper warning more difficult (and thus todo)
-    # it may just have to be that fatal is not an option since we can only reliable emit message on "fatal" error
-    buildPhase = ''
-      if [ ! -e "${path_str}" ]; then
-        ${
-          (if fatal then formatError else formatWarning)
-          (if msg != "" then msg else "Missing file: ${path_str}")
-        }
-        ${if fatal then "exit 1" else ""}
-      fi
-    '';
-    installPhase = "mkdir -p $out";
-  };
+    mkdir -p $out
+    echo ${t} > $out/log
+  '';
 in
 {
   options = {

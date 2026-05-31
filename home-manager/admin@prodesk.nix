@@ -31,6 +31,8 @@
     file.".addrc" = {
       text =
         ''
+          export UV_PYTHON_PREFERENCE='/run/current-system/sw/bin/python3'
+
           arglist_to_str() {
             str=""
             for arg in "''${@}"; do

@@ -5,7 +5,7 @@ in
 {
   imports = [ ./file-assertions.nix ];
 
-  fileAssertions = [ { path_str = ddnsEnvFile; } ];
+  fileAssertions = [ { path_str = ddnsEnvFile; } { path_str = "/etc/duckdns/envvv"; fatal = false; } ];
 
   systemd = {
     services.duckdns-update = {
